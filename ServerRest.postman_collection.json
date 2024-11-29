@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "2a6fc39a-bdfa-479d-bf69-891005c86304",
+		"name": "ServerRest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36581253"
+	},
+	"item": [
+		{
+			"name": "geração de massa",
+			"item": [
+				{
+					"name": "busca nova pessoa",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"/**  Capturar nome, email, senha",
+									"console.log(pm.response.json().results[0].name.first)",
+									"console.log(pm.response.json().results[0].email)",
+									"console.log(pm.response.json().results[0].login.password)",
+									"*/",
+									"pm.globals.set(\"userName\", pm.response.json().results[0].name.first)",
+									"pm.globals.set(\"userEmail\", pm.response.json().results[0].email)",
+									"pm.globals.set(\"usePassword\", pm.response.json().results[0].login.password)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\");",
+									"",
+									"pm.globals.set(\"schema\", {",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"nome\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"email\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"password\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"administrador\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"nome\",",
+									"    \"email\",",
+									"    \"password\",",
+									"    \"administrador\"",
+									"  ]",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://randomuser.me/api/",
+							"protocol": "https",
+							"host": [
+								"randomuser",
+								"me"
+							],
+							"path": [
+								"api",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "usuários",
+			"item": [
+				{
+					"name": "novo cadastro",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar status code 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Validadar a mensagem\", function () {",
+									"    pm.expect(pm.response.json().message).to.be.eql(\"Cadastro realizado com sucesso\");",
+									"});",
+									"",
+									"pm.test(\"Capturar o id\", function () {",
+									"    pm.globals.set(\"userId\", pm.response.json()._id);",
+									"});",
+									"",
+									"pm.test(\"Schema é válido\", function () {",
+									"    pm.expect(tv4.validate(pm.response.json(), pm.globals.get(\"schema\"))).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\");",
+									"",
+									"pm.globals.set(\"schema\", {",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"message\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"_id\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"message\",",
+									"    \"_id\"",
+									"  ]",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{userName}}\",\n    \"email\": \"{{userEmail}}\",\n    \"password\": \"{{usePassword}}\",\n    \"administrador\": \"false\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/usuarios",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscar usuário pelo id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Status code",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200)",
+									"});",
+									"// Contrato -> Feito no Pre-request",
+									"",
+									"// Validar se o id retornado foi o solicitado",
+									"pm.test(\"Validar id informado\", function () {",
+									"    pm.expect(pm.response.json()._id).to.be.eql(pm.globals.get(\"userId\"))",
+									"})",
+									"// Validar e-mail",
+									"pm.test(\"Validar e-mail informado\", function () {",
+									"    pm.expect(pm.response.json().email).to.be.eql(pm.globals.get(\"userEmail\"))",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\");",
+									"",
+									"pm.globals.set(\"schema\", {",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"nome\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"email\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"password\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"administrador\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"_id\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"nome\",",
+									"    \"email\",",
+									"    \"password\",",
+									"    \"administrador\",",
+									"    \"_id\"",
+									"  ]",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/usuarios/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"usuarios",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update de usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200).to.be.equal;",
+									"});",
+									"",
+									"pm.test(\"Validar mensagem de registro alterado com sucesso\", function () {",
+									"    pm.expect(pm.response.json().message).to.be.eql(\"Registro alterado com sucesso\")",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{userName}}\",\n    \"email\": \"{{userEmail}}\",\n    \"password\": \"{{usePassword}}\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/usuarios/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"usuarios",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscar usuário atualizado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar usuário como administrador\", function() {",
+									"    pm.expect(pm.response.json().administrador).to.be.eql(\"true\")",
+									"    });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/usuarios/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"usuarios",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletar usuário da base",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200).to.be.equal;",
+									"});",
+									"",
+									"pm.test(\"Validar mensagem de registro apagado com sucesso\", function () {",
+									"    pm.expect(pm.response.json().message).to.be.eql(\"Registro excluído com sucesso\")",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/usuarios/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"usuarios",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"password\": \"{{usePassword}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
