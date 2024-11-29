@@ -1,9 +1,9 @@
-![Postman.jpeg](https://github.com/user-attachments/assets/c23a2bf3-d3a5-4861-b2b4-504f84e48a69)
-
-# 🌎 Dominando Postman - Teste de API Rest do manual a CI/CD
+![image](https://github.com/user-attachments/assets/1f2119aa-65a5-40c7-bfa6-47569531d7ef)
+# 🌎 Teste de API Rest
 Este repositório foi criado para treinamento do Curso [Dominando Postman: Testando e Automatizando APIs](https://www.udemy.com/course/dominando-postman-2023-testando-e-automatizado-apis/?couponCode=BFCPSALE24).
 
-## 🌐 Tecnologias utilizadas - Postman versão web
+## 🟠 Tecnologias utilizadas
+- Postman versão web
 - Docker version 27.3.1, build ce12230
 - node version 23.3.0
 - npm version 10.9.1
@@ -60,6 +60,5 @@ newman run ServeRest.postman_collection.json -e serveRest_env.postman_environmen
 Se você optou por rodar os teste com o report htmlextra, você gerou um arquivo html com o resultado dos testes e para verificar as validações você pode abrir a pasta newman que foi criada no local em que os arquivos de collection e environment se encontram o [relatório](ServerRest-2024-11-28-16-34-24-864-0.html) gerado.
 ## Entre em contato
 [redes sociais](https://linktr.ee/techberlanda)
-⚠️🔴✅🆑❇️🐳‼️🌐⚙️🌎☸️
 
 
