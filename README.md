@@ -53,6 +53,6 @@ newman run ServeRest.postman_collection.json -e serveRest_env.postman_environmen
 newman run ServeRest.postman_collection.json -e serveRest_env.postman_environment.json -r cli,htmlextra
 ```
 ### Report
-Se você optou por rodar os teste com o report htmlextra, você gerou um arquivo html com o resultado dos testes e para verificar as validações você pode abrir a pasta newman que foi criada no local em que os arquivos de collection e environment se encontram.
+Se você optou por rodar os teste com o report htmlextra, você gerou um arquivo html com o resultado dos testes e para verificar as validações você pode abrir a pasta newman que foi criada no local em que os arquivos de collection e environment se encontram o [relatório](ServerRest-2024-11-28-16-34-24-864-0.html) gerado.
 ## Entre em contato
 [redes sociais](https://linktr.ee/techberlanda)
